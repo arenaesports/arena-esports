@@ -17,15 +17,21 @@
             padding: 20px;
             border-bottom: 2px solid #ff0000;
         }
-        /* Logo design placeholder based on your avatar */
-        .logo-placeholder {
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, #ff0000 20%, #000 80%);
+        /* Logo design using your image */
+        .logo-box {
+            width: 110px;
+            height: 110px;
             border: 3px solid #ff2a2a;
             border-radius: 50%;
             margin: 10px auto;
-            box-shadow: 0px 0px 15px #ff0000;
+            box-shadow: 0px 0px 18px #ff0000;
+            overflow: hidden;
+            background-color: #111;
+        }
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         h1 {
             color: #ff2a2a;
@@ -61,7 +67,7 @@
         .wallet-amount {
             font-size: 22px;
             font-weight: bold;
-            color: #ffcc00; /* Gold Color for Coins */
+            color: #ffcc00; 
         }
         .bonus-box {
             background-color: #161616;
@@ -125,27 +131,25 @@
 <body>
 
     <div class="header">
-        <!-- Logo effect placeholder -->
-        <div class="logo-placeholder"></div>
+        <div class="logo-box">
+            <img src="logo.jpg" alt="Arena Logo" id="logo-img">
+        </div>
         <h1>Arena E-Sports</h1>
         <p>Free Fire Tournament Hub</p>
     </div>
 
     <div class="container">
-        <!-- LIVE WALLET SECTION -->
         <div class="wallet-box">
             <span class="wallet-title">💰 Your Balance:</span>
             <span class="wallet-amount" id="coin-balance">0 Coins</span>
         </div>
 
-        <!-- Daily Bonus Section -->
         <div class="bonus-box">
             <h3>🎁 Daily Login Bonus</h3>
             <p>Claim your 1 Free Coin today!</p>
             <button class="btn btn-bonus" id="bonus-btn" onclick="claimCoin()">CLAIM NOW</button>
         </div>
 
-        <!-- FREE FIRE MATCH CARD -->
         <div class="match-card">
             <div class="match-header">🔥 MATCH #01 - BERMUDA (SOLO)</div>
             <div class="match-details">
@@ -161,23 +165,43 @@
     </div>
 
     <script>
-        // Balance variables
-        let currentBalance = 0;
+        // Real Wallet Logic using localStorage
+        let currentBalance = parseInt(localStorage.getItem('walletBalance')) || 0;
+        let hasClaimedToday = localStorage.getItem('claimedToday') === 'true';
+
+        // Initialize display on load
+        document.getElementById("coin-balance").innerText = currentBalance + " Coins";
+        if (hasClaimedToday) {
+            setBonusButtonClaimed();
+        }
 
         function claimCoin() {
-            if(currentBalance === 0) {
+            if(!hasClaimedToday) {
                 currentBalance += 1;
+                hasClaimedToday = true;
+                
+                // Save to user's browser
+                localStorage.setItem('walletBalance', currentBalance);
+                localStorage.setItem('claimedToday', 'true');
+                
+                // Update screen
                 document.getElementById("coin-balance").innerText = currentBalance + " Coins";
-                document.getElementById("bonus-btn").innerText = "CLAIMED";
-                document.getElementById("bonus-btn").disabled = true;
-                document.getElementById("bonus-btn").style.background = "#333";
+                setBonusButtonClaimed();
                 alert("Bhai, 1 Coin aapke wallet mein add ho gaya hai! 😎🔥");
             }
+        }
+
+        function setBonusButtonClaimed() {
+            const btn = document.getElementById("bonus-btn");
+            btn.innerText = "CLAIMED";
+            btn.disabled = true;
+            btn.style.background = "#333";
         }
 
         function joinMatch() {
             if(currentBalance >= 10) {
                 currentBalance -= 10;
+                localStorage.setItem('walletBalance', currentBalance);
                 document.getElementById("coin-balance").innerText = currentBalance + " Coins";
                 alert("Match Joined Successfully! 👍🎮");
             } else {

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena E-Sports</title>
+    <style>
+        body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            padding: 20px;
+            border-bottom: 2px solid #ff0000;
+        }
+        /* Logo design placeholder based on your avatar */
+        .logo-placeholder {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #ff0000 20%, #000 80%);
+            border: 3px solid #ff2a2a;
+            border-radius: 50%;
+            margin: 10px auto;
+            box-shadow: 0px 0px 15px #ff0000;
+        }
+        h1 {
+            color: #ff2a2a;
+            font-size: 35px;
+            letter-spacing: 2px;
+            margin: 5px 0 0 0;
+            text-transform: uppercase;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            margin-top: 30px;
+        }
+        /* Top Bar for Wallet */
+        .wallet-box {
+            background-color: #161616;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px 25px;
+            width: 80%;
+            max-width: 380px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+        }
+        .wallet-title {
+            font-size: 16px;
+            color: #aaa;
+        }
+        .wallet-amount {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffcc00; /* Gold Color for Coins */
+        }
+        .bonus-box {
+            background-color: #161616;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+        }
+        /* Match Card Style */
+        .match-card {
+            background-color: #161616;
+            border: 1px solid #ff2a2a;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        .match-header {
+            background: linear-gradient(135deg, #ff0000, #990000);
+            padding: 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .match-details {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            text-align: left;
+            font-size: 15px;
+        }
+        .detail-item span {
+            color: #ff2a2a;
+            font-weight: bold;
+        }
+        .match-footer {
+            padding: 15px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #ff0000, #990000);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .btn:hover {
+            transform: scale(1.03);
+        }
+        .btn-bonus {
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <!-- Logo effect placeholder -->
+        <div class="logo-placeholder"></div>
+        <h1>Arena E-Sports</h1>
+        <p>Free Fire Tournament Hub</p>
+    </div>
+
+    <div class="container">
+        <!-- LIVE WALLET SECTION -->
+        <div class="wallet-box">
+            <span class="wallet-title">💰 Your Balance:</span>
+            <span class="wallet-amount" id="coin-balance">0 Coins</span>
+        </div>
+
+        <!-- Daily Bonus Section -->
+        <div class="bonus-box">
+            <h3>🎁 Daily Login Bonus</h3>
+            <p>Claim your 1 Free Coin today!</p>
+            <button class="btn btn-bonus" id="bonus-btn" onclick="claimCoin()">CLAIM NOW</button>
+        </div>
+
+        <!-- FREE FIRE MATCH CARD -->
+        <div class="match-card">
+            <div class="match-header">🔥 MATCH #01 - BERMUDA (SOLO)</div>
+            <div class="match-details">
+                <div class="detail-item">🏆 Prize Pool: <span>₹500</span></div>
+                <div class="detail-item">💀 Per Kill: <span>₹5</span></div>
+                <div class="detail-item">💰 Entry Fee: <span>10 Coins</span></div>
+                <div class="detail-item">⏰ Time: <span>08:00 PM</span></div>
+            </div>
+            <div class="match-footer">
+                <button class="btn" onclick="joinMatch()">JOIN TOURNAMENT</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Balance variables
+        let currentBalance = 0;
+
+        function claimCoin() {
+            if(currentBalance === 0) {
+                currentBalance += 1;
+                document.getElementById("coin-balance").innerText = currentBalance + " Coins";
+                document.getElementById("bonus-btn").innerText = "CLAIMED";
+                document.getElementById("bonus-btn").disabled = true;
+                document.getElementById("bonus-btn").style.background = "#333";
+                alert("Bhai, 1 Coin aapke wallet mein add ho gaya hai! 😎🔥");
+            }
+        }
+
+        function joinMatch() {
+            if(currentBalance >= 10) {
+                currentBalance -= 10;
+                document.getElementById("coin-balance").innerText = currentBalance + " Coins";
+                alert("Match Joined Successfully! 👍🎮");
+            } else {
+                alert("Bhai, entry fees 10 Coins hai. Aapke paas coins kam hain! ❌");
+            }
+        }
+    </script>
+
+</body>
+</html>

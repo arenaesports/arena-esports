@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arena E-Sports</title>
+    <title>Arena E-Sports - Login</title>
     <style>
         body {
             background-color: #0b0b0b;
@@ -13,11 +13,49 @@
             margin: 0;
             padding: 20px;
         }
+        
+        /* LOGIN SCREEN STYLE */
+        #login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+        .login-box {
+            background-color: #161616;
+            border: 2px solid #ff2a2a;
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 360px;
+            box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.3);
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background-color: #222;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .login-box input:focus {
+            border-color: #ff2a2a;
+            outline: none;
+        }
+
+        /* MAIN WEBSITE STYLE (Pehle Chupi Rahegi) */
+        #main-site {
+            display: none;
+        }
+
         .header {
             padding: 20px;
             border-bottom: 2px solid #ff0000;
         }
-        /* Logo design using your image */
         .logo-box {
             width: 110px;
             height: 110px;
@@ -47,7 +85,6 @@
             gap: 25px;
             margin-top: 30px;
         }
-        /* Top Bar for Wallet */
         .wallet-box {
             background-color: #161616;
             border: 1px solid #333;
@@ -77,7 +114,6 @@
             width: 90%;
             max-width: 400px;
         }
-        /* Match Card Style */
         .match-card {
             background-color: #161616;
             border: 1px solid #ff2a2a;
@@ -130,46 +166,77 @@
 </head>
 <body>
 
-    <div class="header">
-        <div class="logo-box">
-            <img src="logo.jpg" alt="Arena Logo" id="logo-img">
+    <!-- 🔐 SCREEN 1: LOGIN PAGE -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2 style="color: #ff2a2a; margin-top: 0;">ARENA LOGIN</h2>
+            <p style="color: #aaa; font-size: 14px;">Enter your details to enter the arena</p>
+            
+            <input type="text" id="username" placeholder="Username (Koi bhi naam)">
+            <input type="password" id="password" placeholder="Password (arena123)">
+            
+            <button class="btn" style="margin-top: 15px;" onclick="checkLogin()">ENTER ARENA</button>
         </div>
-        <h1>Arena E-Sports</h1>
-        <p>Free Fire Tournament Hub</p>
     </div>
 
-    <div class="container">
-        <div class="wallet-box">
-            <span class="wallet-title">💰 Your Balance:</span>
-            <span class="wallet-amount" id="coin-balance">0 Coins</span>
-        </div>
-
-        <div class="bonus-box">
-            <h3>🎁 Daily Login Bonus</h3>
-            <p>Claim your 1 Free Coin today!</p>
-            <button class="btn btn-bonus" id="bonus-btn" onclick="claimCoin()">CLAIM NOW</button>
-        </div>
-
-        <div class="match-card">
-            <div class="match-header">🔥 MATCH #01 - BERMUDA (SOLO)</div>
-            <div class="match-details">
-                <div class="detail-item">🏆 Prize Pool: <span>₹500</span></div>
-                <div class="detail-item">💀 Per Kill: <span>₹5</span></div>
-                <div class="detail-item">💰 Entry Fee: <span>10 Coins</span></div>
-                <div class="detail-item">⏰ Time: <span>08:00 PM</span></div>
+    <!-- 🎮 SCREEN 2: MAIN TOURNAMENT WEBSITE -->
+    <div id="main-site">
+        <div class="header">
+            <div class="logo-box">
+                <img src="logo.jpg" alt="Arena Logo" id="logo-img">
             </div>
-            <div class="match-footer">
-                <button class="btn" onclick="joinMatch()">JOIN TOURNAMENT</button>
+            <h1>Arena E-Sports</h1>
+            <p>Free Fire Tournament Hub</p>
+        </div>
+
+        <div class="container">
+            <div class="wallet-box">
+                <span class="wallet-title">💰 Your Balance:</span>
+                <span class="wallet-amount" id="coin-balance">0 Coins</span>
+            </div>
+
+            <div class="bonus-box">
+                <h3>🎁 Daily Login Bonus</h3>
+                <p>Claim your 1 Free Coin today!</p>
+                <button class="btn btn-bonus" id="bonus-btn" onclick="claimCoin()">CLAIM NOW</button>
+            </div>
+
+            <div class="match-card">
+                <div class="match-header">🔥 MATCH #01 - BERMUDA (SOLO)</div>
+                <div class="match-details">
+                    <div class="detail-item">🏆 Prize Pool: <span>₹500</span></div>
+                    <div class="detail-item">💀 Per Kill: <span>₹5</span></div>
+                    <div class="detail-item">💰 Entry Fee: <span>10 Coins</span></div>
+                    <div class="detail-item">⏰ Time: <span>08:00 PM</span></div>
+                </div>
+                <div class="match-footer">
+                    <button class="btn" onclick="joinMatch()">JOIN TOURNAMENT</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Real Wallet Logic using localStorage
+        // --- 🔒 LOGIN LOGIC ---
+        function checkLogin() {
+            let userInput = document.getElementById("username").value;
+            let passInput = document.getElementById("password").value;
+
+            // Password check (Default password is: arena123)
+            if (userInput.trim() !== "" && passInput === "arena123") {
+                // Login successful! Login page chhupao aur website dikhao
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("main-site").style.display = "block";
+                alert("Welcome to the Arena, " + userInput + "! 🎮🔥");
+            } else {
+                alert("Galat Password bhai! Sahi password daalo. (Hint: arena123) ❌");
+            }
+        }
+
+        // --- 💰 WALLET LOGIC ---
         let currentBalance = parseInt(localStorage.getItem('walletBalance')) || 0;
         let hasClaimedToday = localStorage.getItem('claimedToday') === 'true';
 
-        // Initialize display on load
         document.getElementById("coin-balance").innerText = currentBalance + " Coins";
         if (hasClaimedToday) {
             setBonusButtonClaimed();
@@ -179,12 +246,8 @@
             if(!hasClaimedToday) {
                 currentBalance += 1;
                 hasClaimedToday = true;
-                
-                // Save to user's browser
                 localStorage.setItem('walletBalance', currentBalance);
                 localStorage.setItem('claimedToday', 'true');
-                
-                // Update screen
                 document.getElementById("coin-balance").innerText = currentBalance + " Coins";
                 setBonusButtonClaimed();
                 alert("Bhai, 1 Coin aapke wallet mein add ho gaya hai! 😎🔥");

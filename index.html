@@ -14,9 +14,9 @@
             padding: 20px;
         }
         
-        /* LOGIN SCREEN STYLE */
+        /* LOGIN SCREEN STYLE - Shuru me chhupa rahega */
         #login-screen {
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -47,7 +47,7 @@
             outline: none;
         }
 
-        /* MAIN WEBSITE STYLE (Pehle Chupi Rahegi) */
+        /* MAIN WEBSITE STYLE - Shuru me chhupa rahega */
         #main-site {
             display: none;
         }
@@ -218,16 +218,36 @@
     </div>
 
     <script>
+        // --- ⚙️ SHURU MEIN CHECK KARO KYA USER PEHLE SE LOGGED IN HAI? ---
+        window.onload = function() {
+            let userIsLoggedIn = localStorage.getItem('isLoggedIn');
+            let savedUsername = localStorage.getItem('username');
+
+            if (userIsLoggedIn === 'true' && savedUsername) {
+                // Agar logged in hai, toh login skip karo aur seedha site dikhao
+                document.getElementById("login-screen").style.display = "none";
+                document.getElementById("main-site").style.display = "block";
+                updateBonusTimer();
+            } else {
+                // Agar logged in nahi hai, toh login form dikhao
+                document.getElementById("login-screen").style.display = "flex";
+            }
+        };
+
         // --- 🔒 LOGIN LOGIC ---
         function checkLogin() {
             let userInput = document.getElementById("username").value;
             let passInput = document.getElementById("password").value;
 
             if (userInput.trim() !== "" && passInput === "arena123") {
+                // Login status browser me save karo
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', userInput);
+
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("main-site").style.display = "block";
                 alert("Welcome to the Arena, " + userInput + "! 🎮🔥");
-                updateBonusTimer(); // Login hote hi timer check karega
+                updateBonusTimer();
             } else {
                 alert("Galat Password bhai! Sahi password daalo. (Hint: arena123) ❌");
             }
@@ -237,23 +257,17 @@
         let currentBalance = parseInt(localStorage.getItem('walletBalance')) || 0;
         document.getElementById("coin-balance").innerText = currentBalance + " Coins";
 
-        // Har 1 second mein timer update karne ke liye loop
         setInterval(updateBonusTimer, 1000);
 
         function claimCoin() {
             let lastClaimed = localStorage.getItem('lastClaimedTime');
             let currentTime = new Date().getTime();
-            
-            // 24 ghante = 24 * 60 * 60 * 1000 milliseconds
             let dayInMilliseconds = 24 * 60 * 60 * 1000;
 
             if (!lastClaimed || (currentTime - lastClaimed >= dayInMilliseconds)) {
                 currentBalance += 1;
-                
-                // Naya time save karo
                 localStorage.setItem('walletBalance', currentBalance);
                 localStorage.setItem('lastClaimedTime', currentTime);
-                
                 document.getElementById("coin-balance").innerText = currentBalance + " Coins";
                 alert("Bhai, 1 Coin aapke wallet mein add ho gaya hai! 😎🔥");
                 updateBonusTimer();
@@ -265,7 +279,6 @@
             const btn = document.getElementById("bonus-btn");
             
             if (!lastClaimed) {
-                // Agar kabhi claim nahi kiya toh button normal rahega
                 btn.innerText = "CLAIM NOW";
                 btn.disabled = false;
                 btn.style.background = "linear-gradient(135deg, #ff0000, #990000)";
@@ -277,9 +290,7 @@
             let timePassed = currentTime - lastClaimed;
             
             if (timePassed < dayInMilliseconds) {
-                // Matlab 24 ghante poore nahi hue, timer dikhao
                 let timeLeft = dayInMilliseconds - timePassed;
-                
                 let hours = Math.floor(timeLeft / (1000 * 60 * 60));
                 let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
@@ -288,7 +299,6 @@
                 btn.disabled = true;
                 btn.style.background = "#333";
             } else {
-                // 24 ghante khatam, button active!
                 btn.innerText = "CLAIM NOW";
                 btn.disabled = false;
                 btn.style.background = "linear-gradient(135deg, #ff0000, #990000)";

@@ -161,6 +161,7 @@
         }
         .btn-bonus {
             width: auto;
+            min-width: 140px;
         }
     </style>
 </head>
@@ -179,7 +180,7 @@
         </div>
     </div>
 
-    <!-- 🎮 SCREEN 2: MAIN TOURNAMENT WEBSITE -->
+    <!-- 🎮 SCREEN 2: MAIN WEBSITE -->
     <div id="main-site">
         <div class="header">
             <div class="logo-box">
@@ -222,43 +223,76 @@
             let userInput = document.getElementById("username").value;
             let passInput = document.getElementById("password").value;
 
-            // Password check (Default password is: arena123)
             if (userInput.trim() !== "" && passInput === "arena123") {
-                // Login successful! Login page chhupao aur website dikhao
                 document.getElementById("login-screen").style.display = "none";
                 document.getElementById("main-site").style.display = "block";
                 alert("Welcome to the Arena, " + userInput + "! 🎮🔥");
+                updateBonusTimer(); // Login hote hi timer check karega
             } else {
                 alert("Galat Password bhai! Sahi password daalo. (Hint: arena123) ❌");
             }
         }
 
-        // --- 💰 WALLET LOGIC ---
+        // --- 💰 WALLET & 24H TIMER LOGIC ---
         let currentBalance = parseInt(localStorage.getItem('walletBalance')) || 0;
-        let hasClaimedToday = localStorage.getItem('claimedToday') === 'true';
-
         document.getElementById("coin-balance").innerText = currentBalance + " Coins";
-        if (hasClaimedToday) {
-            setBonusButtonClaimed();
-        }
+
+        // Har 1 second mein timer update karne ke liye loop
+        setInterval(updateBonusTimer, 1000);
 
         function claimCoin() {
-            if(!hasClaimedToday) {
+            let lastClaimed = localStorage.getItem('lastClaimedTime');
+            let currentTime = new Date().getTime();
+            
+            // 24 ghante = 24 * 60 * 60 * 1000 milliseconds
+            let dayInMilliseconds = 24 * 60 * 60 * 1000;
+
+            if (!lastClaimed || (currentTime - lastClaimed >= dayInMilliseconds)) {
                 currentBalance += 1;
-                hasClaimedToday = true;
+                
+                // Naya time save karo
                 localStorage.setItem('walletBalance', currentBalance);
-                localStorage.setItem('claimedToday', 'true');
+                localStorage.setItem('lastClaimedTime', currentTime);
+                
                 document.getElementById("coin-balance").innerText = currentBalance + " Coins";
-                setBonusButtonClaimed();
                 alert("Bhai, 1 Coin aapke wallet mein add ho gaya hai! 😎🔥");
+                updateBonusTimer();
             }
         }
 
-        function setBonusButtonClaimed() {
+        function updateBonusTimer() {
+            let lastClaimed = localStorage.getItem('lastClaimedTime');
             const btn = document.getElementById("bonus-btn");
-            btn.innerText = "CLAIMED";
-            btn.disabled = true;
-            btn.style.background = "#333";
+            
+            if (!lastClaimed) {
+                // Agar kabhi claim nahi kiya toh button normal rahega
+                btn.innerText = "CLAIM NOW";
+                btn.disabled = false;
+                btn.style.background = "linear-gradient(135deg, #ff0000, #990000)";
+                return;
+            }
+
+            let currentTime = new Date().getTime();
+            let dayInMilliseconds = 24 * 60 * 60 * 1000;
+            let timePassed = currentTime - lastClaimed;
+            
+            if (timePassed < dayInMilliseconds) {
+                // Matlab 24 ghante poore nahi hue, timer dikhao
+                let timeLeft = dayInMilliseconds - timePassed;
+                
+                let hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                btn.innerText = `${hours}h ${minutes}m ${seconds}s`;
+                btn.disabled = true;
+                btn.style.background = "#333";
+            } else {
+                // 24 ghante khatam, button active!
+                btn.innerText = "CLAIM NOW";
+                btn.disabled = false;
+                btn.style.background = "linear-gradient(135deg, #ff0000, #990000)";
+            }
         }
 
         function joinMatch() {

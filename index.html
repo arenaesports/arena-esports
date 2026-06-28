@@ -14,8 +14,8 @@
             padding: 20px;
         }
         
-        /* LOGIN SCREEN STYLE - Shuru me chhupa rahega */
-        #login-screen {
+        /* LOGIN & REGISTER SCREEN STYLE */
+        #auth-screen {
             display: none;
             flex-direction: column;
             align-items: center;
@@ -46,8 +46,19 @@
             border-color: #ff2a2a;
             outline: none;
         }
+        .toggle-link {
+            color: #aaa;
+            font-size: 14px;
+            margin-top: 15px;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .toggle-link span {
+            color: #ff2a2a;
+            text-decoration: underline;
+        }
 
-        /* MAIN WEBSITE STYLE - Shuru me chhupa rahega */
+        /* MAIN WEBSITE STYLE */
         #main-site {
             display: none;
         }
@@ -167,16 +178,32 @@
 </head>
 <body>
 
-    <!-- 🔐 SCREEN 1: LOGIN PAGE -->
-    <div id="login-screen">
-        <div class="login-box">
+    <!-- 🔐 SCREEN 1: AUTH PAGE (LOGIN / REGISTER) -->
+    <div id="auth-screen">
+        <!-- LOGIN FORM -->
+        <div class="login-box" id="login-view">
             <h2 style="color: #ff2a2a; margin-top: 0;">ARENA LOGIN</h2>
             <p style="color: #aaa; font-size: 14px;">Enter your details to enter the arena</p>
             
-            <input type="text" id="username" placeholder="Username (Koi bhi naam)">
-            <input type="password" id="password" placeholder="Password (arena123)">
+            <input type="text" id="login-username" placeholder="Username">
+            <input type="password" id="login-password" placeholder="Password">
             
             <button class="btn" style="margin-top: 15px;" onclick="checkLogin()">ENTER ARENA</button>
+            
+            <div class="toggle-link" onclick="toggleAuth('register')">Don't have an account? <span>Register here</span></div>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div class="login-box" id="register-view" style="display: none;">
+            <h2 style="color: #ff2a2a; margin-top: 0;">CREATE ACCOUNT</h2>
+            <p style="color: #aaa; font-size: 14px;">Choose your own secret username & password</p>
+            
+            <input type="text" id="reg-username" placeholder="Create Username">
+            <input type="password" id="reg-password" placeholder="Create Password">
+            
+            <button class="btn" style="margin-top: 15px;" onclick="handleRegister()">REGISTER NOW</button>
+            
+            <div class="toggle-link" onclick="toggleAuth('login')">Already have an account? <span>Login here</span></div>
         </div>
     </div>
 
@@ -218,104 +245,10 @@
     </div>
 
     <script>
-        // --- ⚙️ SHURU MEIN CHECK KARO KYA USER PEHLE SE LOGGED IN HAI? ---
-        window.onload = function() {
-            let userIsLoggedIn = localStorage.getItem('isLoggedIn');
-            let savedUsername = localStorage.getItem('username');
-
-            if (userIsLoggedIn === 'true' && savedUsername) {
-                // Agar logged in hai, toh login skip karo aur seedha site dikhao
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("main-site").style.display = "block";
-                updateBonusTimer();
+        // --- 🔄 SWITCH BETWEEN LOGIN & REGISTER ---
+        function toggleAuth(view) {
+            if(view === 'register') {
+                document.getElementById("login-view").style.display = "none";
+                document.getElementById("register-view").style.display = "block";
             } else {
-                // Agar logged in nahi hai, toh login form dikhao
-                document.getElementById("login-screen").style.display = "flex";
-            }
-        };
-
-        // --- 🔒 LOGIN LOGIC ---
-        function checkLogin() {
-            let userInput = document.getElementById("username").value;
-            let passInput = document.getElementById("password").value;
-
-            if (userInput.trim() !== "" && passInput === "arena123") {
-                // Login status browser me save karo
-                localStorage.setItem('isLoggedIn', 'true');
-                localStorage.setItem('username', userInput);
-
-                document.getElementById("login-screen").style.display = "none";
-                document.getElementById("main-site").style.display = "block";
-                alert("Welcome to the Arena, " + userInput + "! 🎮🔥");
-                updateBonusTimer();
-            } else {
-                alert("Galat Password bhai! Sahi password daalo. (Hint: arena123) ❌");
-            }
-        }
-
-        // --- 💰 WALLET & 24H TIMER LOGIC ---
-        let currentBalance = parseInt(localStorage.getItem('walletBalance')) || 0;
-        document.getElementById("coin-balance").innerText = currentBalance + " Coins";
-
-        setInterval(updateBonusTimer, 1000);
-
-        function claimCoin() {
-            let lastClaimed = localStorage.getItem('lastClaimedTime');
-            let currentTime = new Date().getTime();
-            let dayInMilliseconds = 24 * 60 * 60 * 1000;
-
-            if (!lastClaimed || (currentTime - lastClaimed >= dayInMilliseconds)) {
-                currentBalance += 1;
-                localStorage.setItem('walletBalance', currentBalance);
-                localStorage.setItem('lastClaimedTime', currentTime);
-                document.getElementById("coin-balance").innerText = currentBalance + " Coins";
-                alert("Bhai, 1 Coin aapke wallet mein add ho gaya hai! 😎🔥");
-                updateBonusTimer();
-            }
-        }
-
-        function updateBonusTimer() {
-            let lastClaimed = localStorage.getItem('lastClaimedTime');
-            const btn = document.getElementById("bonus-btn");
-            
-            if (!lastClaimed) {
-                btn.innerText = "CLAIM NOW";
-                btn.disabled = false;
-                btn.style.background = "linear-gradient(135deg, #ff0000, #990000)";
-                return;
-            }
-
-            let currentTime = new Date().getTime();
-            let dayInMilliseconds = 24 * 60 * 60 * 1000;
-            let timePassed = currentTime - lastClaimed;
-            
-            if (timePassed < dayInMilliseconds) {
-                let timeLeft = dayInMilliseconds - timePassed;
-                let hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                
-                btn.innerText = `${hours}h ${minutes}m ${seconds}s`;
-                btn.disabled = true;
-                btn.style.background = "#333";
-            } else {
-                btn.innerText = "CLAIM NOW";
-                btn.disabled = false;
-                btn.style.background = "linear-gradient(135deg, #ff0000, #990000)";
-            }
-        }
-
-        function joinMatch() {
-            if(currentBalance >= 10) {
-                currentBalance -= 10;
-                localStorage.setItem('walletBalance', currentBalance);
-                document.getElementById("coin-balance").innerText = currentBalance + " Coins";
-                alert("Match Joined Successfully! 👍🎮");
-            } else {
-                alert("Bhai, entry fees 10 Coins hai. Aapke paas coins kam hain! ❌");
-            }
-        }
-    </script>
-
-</body>
-</html>
+                document.getElementById("register-view").style.display = "Normally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.

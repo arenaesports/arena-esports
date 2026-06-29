@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arena E-Sports - Login</title>
+    <title>Arena E-Sports - Registration</title>
     <style>
         body {
             background-color: #0b0b0b;
@@ -178,7 +178,9 @@
 </head>
 <body>
 
+    <!-- 🔐 SCREEN 1: AUTH PAGE (LOGIN / REGISTER) -->
     <div id="auth-screen">
+        <!-- LOGIN VIEW -->
         <div class="login-box" id="login-view">
             <h2 style="color: #ff2a2a; margin-top: 0;">ARENA LOGIN</h2>
             <p style="color: #aaa; font-size: 14px;">Enter your details to enter the arena</p>
@@ -191,6 +193,7 @@
             <div class="toggle-link" onclick="toggleAuth('register')">Don't have an account? <span>Register here</span></div>
         </div>
 
+        <!-- REGISTER VIEW -->
         <div class="login-box" id="register-view" style="display: none;">
             <h2 style="color: #ff2a2a; margin-top: 0;">CREATE ACCOUNT</h2>
             <p style="color: #aaa; font-size: 14px;">Choose your own secret username & password</p>
@@ -204,6 +207,7 @@
         </div>
     </div>
 
+    <!-- 🎮 SCREEN 2: MAIN WEBSITE -->
     <div id="main-site">
         <div class="header">
             <div class="logo-box">
@@ -244,123 +248,7 @@
         // --- 🔄 SWITCH BETWEEN LOGIN & REGISTER ---
         function toggleAuth(view) {
             if(view === 'register') {
-                document.getElementById("login-view").style.style.display = "none";
+                document.getElementById("login-view").style.display = "none";
                 document.getElementById("register-view").style.display = "block";
             } else {
-                document.getElementById("register-view").style.display = "none";
-                document.getElementById("login-view").style.display = "block";
-            }
-        }
-
-        // --- ⚙️ AUTO LOGIN CHECK ---
-        window.onload = function() {
-            let sessionLogin = localStorage.getItem('isLoggedIn');
-            if (sessionLogin === 'true') {
-                document.getElementById("auth-screen").style.display = "none";
-                document.getElementById("main-site").style.display = "block";
-                updateBonusTimer();
-            } else {
-                document.getElementById("auth-screen").style.display = "flex";
-            }
-        };
-
-        // --- 📝 REGISTER LOGIC ---
-        function handleRegister() {
-            let uName = document.getElementById("reg-username").value.trim();
-            let pWord = document.getElementById("reg-password").value;
-
-            if(uName === "" || pWord === "") {
-                alert("Bhai, khali mat chhodo! Sahi username aur password daalo.");
-                return;
-            }
-
-            // Save details to localStorage
-            localStorage.setItem('saved_user_' + uName, pWord);
-            alert("Account created successfully! Ab login karo. 🎉");
-            toggleAuth('login');
-        }
-
-        // --- 🔒 LOGIN LOGIC ---
-        function checkLogin() {
-            let uName = document.getElementById("login-username").value.trim();
-            let pWord = document.getElementById("login-password").value;
-
-            let correctPassword = localStorage.getItem('saved_user_' + uName);
-
-            if (correctPassword && correctPassword === pWord) {
-                localStorage.setItem('isLoggedIn', 'true');
-                document.getElementById("auth-screen").style.display = "none";
-                document.getElementById("main-site").style.display = "block";
-                alert("Welcome to the Arena! 🎮🔥");
-                updateBonusTimer();
-            } else {
-                alert("Galat details ya account nahi mila! Register karo pehle. ❌");
-            }
-        }
-
-        // --- 💰 WALLET & 24H TIMER LOGIC ---
-        let currentBalance = parseInt(localStorage.getItem('walletBalance')) || 0;
-        document.getElementById("coin-balance").innerText = currentBalance + " Coins";
-
-        setInterval(updateBonusTimer, 1000);
-
-        function claimCoin() {
-            let lastClaimed = localStorage.getItem('lastClaimedTime');
-            let currentTime = new Date().getTime();
-            let dayInMilliseconds = 24 * 60 * 60 * 1000;
-
-            if (!lastClaimed || (currentTime - lastClaimed >= dayInMilliseconds)) {
-                currentBalance += 1;
-                localStorage.setItem('walletBalance', currentBalance);
-                localStorage.setItem('lastClaimedTime', currentTime);
-                document.getElementById("coin-balance").innerText = currentBalance + " Coins";
-                alert("Bhai, 1 Coin aapke wallet mein add ho gaya hai! 😎🔥");
-                updateBonusTimer();
-            }
-        }
-
-        function updateBonusTimer() {
-            let lastClaimed = localStorage.getItem('lastClaimedTime');
-            const btn = document.getElementById("bonus-btn");
-            if(!btn) return;
-            
-            if (!lastClaimed) {
-                btn.innerText = "CLAIM NOW";
-                btn.disabled = false;
-                btn.style.background = "linear-gradient(135deg, #ff0000, #990000)";
-                return;
-            }
-
-            let currentTime = new Date().getTime();
-            let dayInMilliseconds = 24 * 60 * 60 * 1000;
-            let timePassed = currentTime - lastClaimed;
-            
-            if (timePassed < dayInMilliseconds) {
-                let timeLeft = dayInMilliseconds - timePassed;
-                let hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                
-                btn.innerText = `${hours}h ${minutes}m ${seconds}s`;
-                btn.disabled = true;
-                btn.style.background = "#333";
-            } else {
-                btn.innerText = "CLAIM NOW";
-                btn.disabled = false;
-                btn.style.background = "linear-gradient(135deg, #ff0000, #990000)";
-            }
-        }
-
-        function joinMatch() {
-            if(currentBalance >= 10) {
-                currentBalance -= 10;
-                localStorage.setItem('walletBalance', currentBalance);
-                document.getElementById("coin-balance").innerText = currentBalance + " Coins";
-                alert("Match Joined Successfully! 👍🎮");
-            } else {
-                alert("Bhai, entry fees 10 Coins hai. Aapke paas coins kam hain! ❌");
-            }
-        }
-    </script>
-</body>
-</html>
+                document.getElementById("register-view").style.display = "Normally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
